@@ -1,5 +1,5 @@
-import SignUpForm from '../Forms/SignupUser'
-import SignUpFormik from '../Forms/SignupUserCopy'
+//import SignUpForm from '../Forms/SignupUser'
+import SignUpFormik from '../components/Forms/SignupUserCopy'
 
 const UserIntro = () => {
    return (

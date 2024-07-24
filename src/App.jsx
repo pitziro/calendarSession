@@ -1,7 +1,6 @@
 // import BCalendar from '../src/components/Calendar/BigCalendar'
 import './App.css'
-import SignUpForm from './components/Forms/SignupUser'
-import UserIntro from './components/pages/UserIntro'
+import UserIntro from './pages/UserIntro'
 
 function App() {
    return (

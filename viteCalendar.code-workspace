@@ -24,6 +24,9 @@
          "titleBar.inactiveBackground": "#09455e99",
          "titleBar.inactiveForeground": "#e7e7e799"
       },
-      "peacock.color": "#09455e"
+      "peacock.color": "#09455e",
+      "C_Cpp.autocompleteAddParentheses": true,
+      "editor.defaultFormatter": "esbenp.prettier-vscode",
+      "editor.formatOnSave": true
    }
 }

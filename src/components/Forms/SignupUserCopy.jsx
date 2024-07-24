@@ -1,22 +1,29 @@
 import { useState } from 'react'
-import { Formik, Field, Form } from 'formik'
+import { Formik, Field, Form, ErrorMessage } from 'formik'
 
-import SignupSchema from './FormSchema'
+import { SignUpSchema } from './FormSchema'
 import eyeOpen from '../../assets/eye.svg'
 import eyeShut from '../../assets/eyeshut.svg'
 import './newForm.css'
 
-const InputField = ({ field, form: { touched, errors }, label, ...props }) => (
+const InputField = ({ field, label, ...props }) => (
    <div className="formFieldset">
       <div className="inputWrapperer">
-         <input {...field} {...props} placeholder="" />
+         <input id={field.name} {...field} {...props} placeholder="" />
          <label htmlFor={field.name}>{label}</label>
       </div>
-      {touched[field.name] && errors[field.name] && (
-         <span className="errorDetail">{errors[field.name]}</span>
-      )}
+      <ErrorMessage component="span" name={field.name} />
    </div>
 )
+
+const handleFormSubmit = (values, onSubmitProps) => {
+   setTimeout(() => {
+      console.log('form enviada: ', values)
+      console.log(onSubmitProps)
+      //al tener la respuesta del backend
+      onSubmitProps.setSubmitting(false)
+   }, 1500)
+}
 
 const SignUpFormik = () => {
    const [showPassword, setShowPassword] = useState(false)
@@ -30,14 +37,14 @@ const SignUpFormik = () => {
             email: '',
             password: '',
          }}
-         validationSchema={SignupSchema}
-         onSubmit={values => {
-            console.log('Formulario enviado')
-            console.log(values)
-         }}
+         validationSchema={SignUpSchema}
+         onSubmit={(values, onSubmitProps) =>
+            handleFormSubmit(values, onSubmitProps)
+         }
       >
-         {({ errors, touched, isSubmitting }) => (
+         {formik => (
             <Form className="newFormulario">
+               {console.log(formik)}
                <Field
                   type="text"
                   name="nombres"
@@ -78,8 +85,12 @@ const SignUpFormik = () => {
                      onClick={() => setShowPassword(!showPassword)}
                   />
                </div>
-
-               <button disabled={isSubmitting} type="submit">
+               <hr />
+               <button
+                  className="sendBtn"
+                  disabled={!formik.isValid || formik.isSubmitting}
+                  type="submit"
+               >
                   Registrarme
                </button>
             </Form>

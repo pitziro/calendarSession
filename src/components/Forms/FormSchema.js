@@ -1,8 +1,9 @@
 import * as Yup from 'yup'
 
 const regexPhone = /^(9)[0-9]{8}$/
+const regexEmail = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
 
-const SignupSchema = Yup.object().shape({
+export const SignUpSchema = Yup.object().shape({
    nombres: Yup.string()
       .required('Nombres es requerido')
       .min(4, 'Introduza un nombre válido(4)')
@@ -21,11 +22,19 @@ const SignupSchema = Yup.object().shape({
       .required('Movil es requerido'),
    email: Yup.string()
       .required('Email es requerido')
-      .email('Introduza un email válido'),
+      .matches(regexEmail, 'Introduzca un email válido'),
    password: Yup.string()
       .required('Password es requerido')
       .min(5, 'Introduza una contraseña válida (5)')
       .max(12, 'Introduzca una contraseña válida (12)'),
 })
 
-export default SignupSchema
+export const SignInSchema = Yup.object().shape({
+   email: Yup.string()
+      .required('Email es requerido')
+      .matches(regexEmail, 'Introduzca un email válido'),
+   password: Yup.string()
+      .required('Password es requerido')
+      .min(5, 'Introduza una contraseña válida (5)')
+      .max(12, 'Introduzca una contraseña válida (12)'),
+})
