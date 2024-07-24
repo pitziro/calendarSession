@@ -1,0 +1,105 @@
+#root {
+   max-width: 1280px;
+   margin: 0 auto;
+   padding: 2rem;
+   text-align: center;
+}
+
+.rbc-toolbar {
+   flex-direction: row-reverse;
+}
+
+.rbc-current-time-indicator {
+   height: 2px !important;
+   background-color: red !important;
+}
+
+.event-title {
+   display: flex;
+   align-items: center;
+   & img {
+      height: 15px;
+   }
+}
+
+.rbc-event-content {
+   display: flex;
+   align-items: center;
+}
+
+.rbc-event-label {
+   display: none !important;
+}
+
+.formulario {
+   display: flex;
+   margin: 0 auto;
+   flex-direction: column;
+   width: 25%;
+   position: relative;
+   border-bottom: 2px solid gray;
+   padding-bottom: 45px;
+
+   & input {
+      margin-top: 10px;
+      height: 1.25rem;
+      border-radius: 4px;
+   }
+
+   & .inputError {
+      border: 0.5px solid red;
+   }
+
+   & .errorDetail {
+      color: red;
+      font-size: 0.7em;
+      text-align: right;
+   }
+
+   & button {
+      margin-top: 10px;
+   }
+
+   & .formField {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+
+      & label {
+         width: 25%;
+         text-align: right;
+         font-size: 0.85rem;
+         padding-right: 10px;
+      }
+
+      & input {
+         width: 75%;
+      }
+   }
+
+   & .fieldPassword {
+      display: flex;
+      position: relative;
+      align-items: center;
+      justify-content: space-between;
+
+      & input {
+         width: 100%;
+      }
+
+      & img {
+         position: absolute;
+         height: 13px;
+         right: 5px;
+         top: 45%;
+         cursor: pointer;
+      }
+   }
+}
+
+.passwordToggle {
+   font-size: 0.75rem;
+   color: gray;
+   cursor: pointer;
+   text-align: right;
+}
