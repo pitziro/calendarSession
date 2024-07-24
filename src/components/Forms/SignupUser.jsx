@@ -5,6 +5,18 @@ import SignupSchema from '../../components/Forms/FormSchema'
 import eyeSvg from '../../assets/eye.svg'
 import '../../App.css'
 
+const InputField = ({ field, form: { touched, errors }, label, ...props }) => (
+   <div className="formField">
+      <div className="inputWrapper">
+         <input {...field} {...props} placeholder="" />
+         <label htmlFor={field.name}>{label}</label>
+      </div>
+      {touched[field.name] && errors[field.name] && (
+         <span className="errorDetail">{errors[field.name]}</span>
+      )}
+   </div>
+)
+
 const SignUpForm = () => {
    const [showPassword, setShowPassword] = useState(false)
 
@@ -70,7 +82,7 @@ const SignUpForm = () => {
                {touched.movil && errors.movil && (
                   <span className="errorDetail">{errors.movil}</span>
                )}
-               <Field
+               {/* <Field
                   name="email"
                   type="email"
                   placeholder="pepito@gmail.com"
@@ -78,8 +90,15 @@ const SignUpForm = () => {
                />
                {touched.email && errors.email && (
                   <span className="errorDetail">{errors.email}</span>
-               )}
+               )} */}
+               <Field
+                  name="email"
+                  type="email"
+                  label="Email"
+                  component={InputField}
+               />
                <div className="fieldPassword">
+                  <label htmlFor="password">Password</label>
                   <Field
                      name="password"
                      type={showPassword ? 'text' : 'password'}

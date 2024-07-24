@@ -1,10 +1,4 @@
-#root {
-   max-width: 1280px;
-   margin: 0 auto;
-   padding: 2rem;
-   text-align: center;
-}
-
+/** DEL CALENDAR ***/
 .rbc-toolbar {
    flex-direction: row-reverse;
 }
@@ -31,10 +25,11 @@
    display: none !important;
 }
 
+/** DEL FORMULARIO***/
 .formulario {
-   display: flex;
+   /* display: flex; */
    margin: 0 auto;
-   flex-direction: column;
+   /* flex-direction: column; */
    width: 25%;
    position: relative;
    border-bottom: 2px solid gray;
@@ -65,16 +60,55 @@
       justify-content: space-between;
       align-items: baseline;
 
-      & label {
+      /* & label {
          width: 25%;
          text-align: right;
          font-size: 0.85rem;
          padding-right: 10px;
-      }
+      } */
 
       & input {
          width: 75%;
       }
+   }
+
+   & .inputWrapper {
+      position: relative;
+      border: 1px dashed red;
+   }
+
+   & .inputWrapper input {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 16px;
+      transition: border-color 0.3s;
+   }
+
+   & .inputWrapper label {
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      background-color: white;
+      padding: 0 5px;
+      font-size: 1rem;
+      color: #666;
+      transition: all 0.3s;
+      pointer-events: none;
+   }
+
+   .inputWrapper input:focus + label,
+   .inputWrapper input:not(:placeholder-shown) + label {
+      top: 0;
+      font-size: 12px;
+      color: #1976d2;
+   }
+
+   .inputWrapper input:focus {
+      border-color: #1976d2;
+      outline: none;
    }
 
    & .fieldPassword {
