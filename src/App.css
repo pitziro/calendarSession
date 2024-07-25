@@ -1,3 +1,6 @@
+* {
+   box-sizing: border-box;
+}
 /** DEL CALENDAR ***/
 .rbc-toolbar {
    flex-direction: row-reverse;
