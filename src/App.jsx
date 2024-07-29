@@ -1,13 +1,20 @@
 // import BCalendar from '../src/components/Calendar/BigCalendar'
-import './App.css'
-import UserIntro from './pages/UserIntro'
+import { Route, Routes } from 'react-router-dom'
+import Dashboard from './pages/Dashboard'
+import LoginForm from './components/Forms/LoginUser'
+import PwdRecover from './components/Forms/PwdRecover'
+import SignUpFormik from './components/Forms/SignUpUser'
+import PwdReset from './components/Forms/PwdReset'
 
 function App() {
    return (
-      <>
-         <h1> Agenda PsicoLocos</h1>
-         <UserIntro />
-      </>
+      <Routes>
+         <Route path="/signup" element={<SignUpFormik />} />
+         <Route path="/login" element={<LoginForm />} />
+         <Route path="/dashboard" element={<Dashboard />} />
+         <Route path="/pwdrecover" element={<PwdRecover />} />
+         <Route path="/pwdreset" element={<PwdReset />} />
+      </Routes>
    )
 }
 

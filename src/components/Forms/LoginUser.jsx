@@ -1,70 +1,51 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 import { Formik, Field, Form } from 'formik'
+import { SignInSchema } from './FormSchema'
+import { loginClient } from '../../supabase/handleClient'
 
-import { SignUpSchema } from './FormSchema'
+import { useClientStore } from '../../context/clientStore'
+import InputField from './CustomInputField'
 import eyeOpen from '../../assets/eye.svg'
 import eyeShut from '../../assets/eyeshut.svg'
-import InputField from './CustomInputField'
-import { Link } from 'react-router-dom'
-import { registerClient } from '../../supabase/handleClient'
 import './newForm.css'
 
-const SignUpFormik = () => {
+const LoginForm = () => {
+   const navigate = useNavigate()
+
+   const InitialFormValues = { email: '', password: '' }
    const [showPassword, setShowPassword] = useState(false)
 
-   const handleFormSubmit = (values, onSubmitProps) => {
-      console.log('form enviada: ', values)
-      //al tener la respuesta del backend
-      registerClient(values.email, values.password).then(res => {
-         console.log(res)
-      })
+   const client = useClientStore(state => state.client)
+   const setClient = useClientStore(state => state.setClient)
+
+   const handleLogin = async (values, onSubmitProps) => {
+      const logged = await loginClient(values.email, values.password)
+      const { email, id } = logged.user
+      const { access_token } = logged.session
+
+      setClient(email, id, access_token)
+      navigate('/dashboard')
       onSubmitProps.setSubmitting(false)
    }
 
-   const InitialFormVales = {
-      nombres: '',
-      apellidos: '',
-      movil: '',
-      email: '',
-      password: '',
-   }
    return (
-      <div className="formContainer">
+      <>
          <Formik
-            initialValues={InitialFormVales}
-            validationSchema={SignUpSchema}
+            initialValues={InitialFormValues}
+            validationSchema={SignInSchema}
             onSubmit={(values, onSubmitProps) =>
-               handleFormSubmit(values, onSubmitProps)
+               handleLogin(values, onSubmitProps)
             }
          >
             {formik => (
                <Form className="newFormulario">
-                  <Field
-                     name="nombres"
-                     type="text"
-                     label="Nombres"
-                     component={InputField}
-                  />
-
-                  <Field
-                     type="text"
-                     name="apellidos"
-                     label="Apellidos"
-                     component={InputField}
-                  />
-                  <Field
-                     type="text"
-                     name="movil"
-                     label="Telefono"
-                     component={InputField}
-                  />
                   <Field
                      name="email"
                      type="email"
                      label="Email"
                      component={InputField}
                   />
-
                   <div className="fieldPassword">
                      <Field
                         name="password"
@@ -84,18 +65,23 @@ const SignUpFormik = () => {
                      disabled={!formik.isValid || formik.isSubmitting}
                      type="submit"
                   >
-                     Registrarme
+                     Login
                   </button>
                </Form>
             )}
          </Formik>
 
          <section className="sFormLinks">
-            ¿Ya tienes una cuenta? Logueate&nbsp;
-            <Link to="/login">aqui</Link>
+            ¿Olvidaste tu contraseña? Recupérala&nbsp;
+            <Link to="/pwdrecover">aqui</Link>
          </section>
-      </div>
+
+         <section className="sFormLinks">
+            ¿No tienes una cuenta? Genera una &nbsp;
+            <Link to="/signup">aqui</Link>
+         </section>
+      </>
    )
 }
 
-export default SignUpFormik
+export default LoginForm

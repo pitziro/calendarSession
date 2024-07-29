@@ -23,7 +23,7 @@ export const SignUpSchema = Yup.object().shape({
       .matches(regexEmail, 'Introduzca un email válido'),
    password: Yup.string()
       .required('Password es requerido')
-      .min(5, 'Introduza una contraseña válida (min:5)')
+      .min(6, 'Introduza una contraseña válida (min:5)')
       .max(12, 'Introduzca una contraseña válida (max:12)'),
 })
 
@@ -33,6 +33,6 @@ export const SignInSchema = Yup.object().shape({
       .matches(regexEmail, 'Introduzca un email válido'),
    password: Yup.string()
       .required('Password es requerido')
-      .min(5, 'Introduza una contraseña válida (5)')
+      .min(6, 'Introduza una contraseña válida (5)')
       .max(12, 'Introduzca una contraseña válida (12)'),
 })
