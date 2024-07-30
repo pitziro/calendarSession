@@ -6,9 +6,10 @@ export async function loginClient(formEmail, formPwd) {
          email: formEmail,
          password: formPwd,
       })
-      return data
-   } catch (error) {
-      console.log('Error signing in:', error.message)
+      if (data) return data
+      if (error) console.log('Server error loggin in:', error.message)
+   } catch (err) {
+      console.log('Error loggin in:', err.message)
    }
 }
 
@@ -18,34 +19,42 @@ export async function registerClient(formEmail, formPwd) {
          email: formEmail,
          password: formPwd,
       })
-      console.log(data)
-   } catch (error) {
-      console.log('Error registering :', error.message)
+      if (error) console.log('Server error registering user:', error.message)
+      return data
+   } catch (err) {
+      console.log('Error registering :', err.message)
    }
 }
 
 export async function logoutClient() {
-   const { error } = await supabaseClient.auth.signOut()
+   try {
+      const { data, error } = await supabaseClient.auth.signOut()
+      if (data) return data
+      if (error) console.log('Server error signing out:', error.message)
+   } catch (err) {
+      console.log('Error signing out :', err.message)
+   }
 }
 
 export async function resetUserPwd(formEmail) {
-   const { data, error } = await supabaseClient.auth.resetPasswordForEmail(
-      formEmail,
-      { redirectTo: 'http://localhost:5173/pwdreset' }
-   )
-   if (data) alert('Correo enviado')
-   if (error) alert('Error en el envio')
+   try {
+      const { data, error } =
+         await supabaseClient.auth.resetPasswordForEmail(formEmail)
+      if (data) return data
+      if (error) console.log('Server error sending re-pwd:', error.message)
+   } catch (err) {
+      console.log('Error sending re-pwd:', err.message)
+   }
 }
 
 export async function updateUserPwd(formNewPwd) {
-   const { data, error } = await supabaseClient.auth.updateUser({
-      password: formNewPwd,
-   })
-   if (data) {
-      console.log(data)
-      alert('Password updated successfully!')
-      return data
+   try {
+      const { data, error } = await supabaseClient.auth.updateUser({
+         password: formNewPwd,
+      })
+      if (data) return data
+      if (error) console.log('Server error reseting pwd:', error.message)
+   } catch (err) {
+      console.log('Error updating password:', err.message)
    }
-
-   if (error) alert('There was an error updating your password.')
 }

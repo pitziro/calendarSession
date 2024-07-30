@@ -1,5 +1,4 @@
 import { useClientStore } from '../context/clientStore'
-import { useEffect } from 'react'
 import { logoutClient } from '../supabase/handleClient'
 import { useNavigate, Link } from 'react-router-dom'
 
@@ -8,9 +7,10 @@ const Dashboard = () => {
    const client = useClientStore(state => state.client)
    const emptyClient = useClientStore(state => state.emptyClient)
 
-   const handleLogout = () => {
+   const handleLogout = async () => {
       if (client.userId) {
-         logoutClient()
+         const res = await logoutClient()
+         console.log(res)
          emptyClient()
          navigate('/login')
       }
@@ -25,6 +25,10 @@ const Dashboard = () => {
             </section>
          </>
       )
+
+   useEffect(() => {
+      //funcion para conseguir los datos del cliente
+   }, [client])
 
    return (
       <div>

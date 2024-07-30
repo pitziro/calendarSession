@@ -36,3 +36,16 @@ export const SignInSchema = Yup.object().shape({
       .min(6, 'Introduza una contraseña válida (5)')
       .max(12, 'Introduzca una contraseña válida (12)'),
 })
+
+export const newPwdSchema = Yup.object().shape({
+   email: Yup.string()
+      .required('Password es requerido')
+      .min(6, 'Introduza una contraseña válida (5)')
+      .max(12, 'Introduzca una contraseña válida (12)'),
+})
+
+export const emailPwdResetSchema = Yup.object().shape({
+   email: Yup.string()
+      .required('Email es requerido')
+      .matches(regexEmail, 'Introduzca un email válido'),
+})

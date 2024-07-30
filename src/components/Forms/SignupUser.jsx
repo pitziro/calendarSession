@@ -1,23 +1,23 @@
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import { Formik, Field, Form } from 'formik'
-
 import { SignUpSchema } from './FormSchema'
+
+import { registerClient } from '../../supabase/handleClient'
 import eyeOpen from '../../assets/eye.svg'
 import eyeShut from '../../assets/eyeshut.svg'
 import InputField from './CustomInputField'
-import { Link } from 'react-router-dom'
-import { registerClient } from '../../supabase/handleClient'
 import './newForm.css'
 
 const SignUpFormik = () => {
    const [showPassword, setShowPassword] = useState(false)
 
-   const handleFormSubmit = (values, onSubmitProps) => {
+   const handleFormSubmit = async (values, onSubmitProps) => {
+      const res = await registerClient(values.email, values.password)
       console.log('form enviada: ', values)
-      //al tener la respuesta del backend
-      registerClient(values.email, values.password).then(res => {
-         console.log(res)
-      })
+      console.log(res)
+      // handle los errores qué pasa cuando hay mensajes de error
+
       onSubmitProps.setSubmitting(false)
    }
 

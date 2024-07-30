@@ -12,23 +12,22 @@ import './newForm.css'
 
 const LoginForm = () => {
    const navigate = useNavigate()
-
-   const InitialFormValues = { email: '', password: '' }
    const [showPassword, setShowPassword] = useState(false)
-
-   const client = useClientStore(state => state.client)
    const setClient = useClientStore(state => state.setClient)
 
    const handleLogin = async (values, onSubmitProps) => {
       const logged = await loginClient(values.email, values.password)
       const { email, id } = logged.user
       const { access_token } = logged.session
-
+      console.log(logged)
       setClient(email, id, access_token)
-      navigate('/dashboard')
+      navigate('/dashboard', { replace: true })
+
+      // handle los errores qué pasa cuando hay mensajes de error
       onSubmitProps.setSubmitting(false)
    }
 
+   const InitialFormValues = { email: '', password: '' }
    return (
       <>
          <Formik

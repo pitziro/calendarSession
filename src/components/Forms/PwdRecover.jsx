@@ -1,14 +1,16 @@
 import { Field, Form, Formik } from 'formik'
-import { SignInSchema } from './FormSchema'
+import { emailPwdResetSchema } from './FormSchema'
 import InputField from './CustomInputField'
 import { resetUserPwd } from '../../supabase/handleClient'
 
 function PwdRecover() {
-   const handleFormSubmit = (values, onSubmitProps) => {
-      resetUserPwd(values.email).then(res => {
-         console.log(res)
-      })
+   const handleFormSubmit = async (values, onSubmitProps) => {
+      const res = await resetUserPwd(values.email)
       console.log('form enviada: ', values)
+      console.log(res)
+
+      // handle los errores qué pasa cuando hay mensajes de error
+      // esto deberia llevar a otra pagina, tal vez la de login con un mensaje de exito o error
       onSubmitProps.setSubmitting(false)
    }
 
@@ -20,7 +22,7 @@ function PwdRecover() {
       <div className="formContainer">
          <Formik
             initialValues={InitialFormVales}
-            // validationSchema={SignInSchema}
+            validationSchema={emailPwdResetSchema}
             onSubmit={handleFormSubmit}
          >
             {formik => (

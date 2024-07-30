@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Field, Form, Formik } from 'formik'
-import { SignInSchema } from './FormSchema'
+import { newPwdSchema } from './FormSchema'
 import { updateUserPwd } from '../../supabase/handleClient'
 import { useNavigate } from 'react-router-dom'
 import InputField from './CustomInputField'
@@ -12,10 +12,17 @@ function PwdReset() {
    const navigate = useNavigate()
 
    const handleFormSubmit = async (values, onSubmitProps) => {
-      const data = await updateUserPwd(values.email)
-      console.log(data)
-      onSubmitProps.setSubmitting(false)
-      navigate('/login')
+      try {
+         const { data, error } = await updateUserPwd(values.password)
+         if (error) throw error
+         console.log(data)
+         navigate('/login')
+      } catch (err) {
+         console.log('Error: ', err)
+         // handle los errores qué pasa cuando hay mensajes de error
+      } finally {
+         onSubmitProps.setSubmitting(false)
+      }
    }
 
    const InitialFormVales = {
@@ -26,7 +33,7 @@ function PwdReset() {
       <div className="formContainer">
          <Formik
             initialValues={InitialFormVales}
-            // validationSchema={SignInSchema}
+            validationSchema={newPwdSchema}
             onSubmit={handleFormSubmit}
          >
             {formik => (
