@@ -2,6 +2,7 @@ import { Field, Form, Formik } from 'formik'
 import { emailPwdResetSchema } from './FormSchema'
 import InputField from './CustomInputField'
 import { resetUserPwd } from '../../supabase/handleClient'
+import { Link } from 'react-router-dom'
 
 function PwdRecover() {
    const handleFormSubmit = async (values, onSubmitProps) => {
@@ -46,7 +47,7 @@ function PwdRecover() {
             )}
          </Formik>
          <p className="sFormLinks">
-            ¿Ya tienes una cuenta? &nbsp;<a href="/login">Inicia sesión</a>
+            ¿Ya tienes una cuenta? &nbsp;<Link to="/login">Inicia sesión</Link>
          </p>
       </div>
    )

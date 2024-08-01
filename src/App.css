@@ -1,3 +1,7 @@
+:root {
+   --toastify-toast-min-height: 25px;
+}
+
 * {
    box-sizing: border-box;
 }

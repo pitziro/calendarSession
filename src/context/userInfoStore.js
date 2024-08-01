@@ -1,7 +1,4 @@
-import { create } from 'zustand'
-import { persist } from 'zustand/middleware'
-
-const userInfoStore = set => ({
+export const userInfoStore = set => ({
    // state variables
    userInfo: {
       userEmail: '',
@@ -13,13 +10,7 @@ const userInfoStore = set => ({
       aseguradora: '',
    },
 
-   isAuth: false,
-
-   userAgenda: [{}],
-
    // state setters
-   setIsAuth: authValue => set({ isAuth: authValue }),
-
    setUserInfo: (userEmail, userId, userToken) =>
       set(state => ({
          userInfo: {
@@ -47,14 +38,6 @@ const userInfoStore = set => ({
             userEmail: '',
             userId: '',
             userToken: '',
-            userFullname: '', //será Nombre + Apellido
-            userPhoneNumber: '',
-            rol: '',
-            aseguradora: '',
          },
       }),
 })
-
-export const useUserInfoStore = create(
-   persist(userInfoStore, { name: 'userInfoAuth' })
-)

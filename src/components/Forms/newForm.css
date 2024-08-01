@@ -106,3 +106,19 @@
    white-space: 'pre-wrap';
    font-size: 0.8rem;
 }
+
+/* TOASTER */
+.myToastContainerErr {
+   position: absolute;
+   max-width: 250px;
+   right: 10px;
+   color: black;
+   background-color: #e7e1e0;
+}
+
+.myToastBodyErr {
+   height: 25px;
+   font-size: 0.757rem;
+   padding-left: 10px;
+   height: 25px;
+}

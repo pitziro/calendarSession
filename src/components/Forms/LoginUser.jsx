@@ -1,10 +1,13 @@
 import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Formik, Field, Form } from 'formik'
+import { toast } from 'react-toastify'
+
 import { SignInSchema } from './FormSchema'
 import { loginClient } from '../../supabase/handleClient'
+import { useUserInfoStore } from '../../context/clientStore'
+import FormToast from './FormToast'
 
-import { useClientStore } from '../../context/clientStore'
 import InputField from './CustomInputField'
 import eyeOpen from '../../assets/eye.svg'
 import eyeShut from '../../assets/eyeshut.svg'
@@ -13,23 +16,57 @@ import './newForm.css'
 const LoginForm = () => {
    const navigate = useNavigate()
    const [showPassword, setShowPassword] = useState(false)
-   const setClient = useClientStore(state => state.setClient)
+
+   const setUserInfo = useUserInfoStore(state => state.setUserInfo)
+   const setIsAuth = useUserInfoStore(state => state.setIsAuth)
+   const isAuth = useUserInfoStore(state => state.isAuth)
+
+   // por si entra directamente al link
+   useEffect(() => {
+      if (isAuth) navigate('/dashboard', { replace: true })
+   }, [isAuth, navigate])
+
+   const callToaster = pErrorMsg => {
+      toast.error(pErrorMsg, {
+         className: 'myToastContainerErr',
+         bodyClassName: 'myToastBodyErr',
+      })
+   }
 
    const handleLogin = async (values, onSubmitProps) => {
-      const logged = await loginClient(values.email, values.password)
-      const { email, id } = logged.user
-      const { access_token } = logged.session
-      console.log(logged)
-      setClient(email, id, access_token)
-      navigate('/dashboard', { replace: true })
-
-      // handle los errores qué pasa cuando hay mensajes de error
-      onSubmitProps.setSubmitting(false)
+      try {
+         const logged = await loginClient(values.email, values.password)
+         const { email, id } = logged.user
+         const { access_token } = logged.session
+         setUserInfo(email, id, access_token)
+         setIsAuth(true)
+         navigate('/dashboard', { replace: true })
+      } catch (err) {
+         let errorMessage = 'Error! Por favor, intenta de nuevo más tarde.'
+         if (err.message) {
+            switch (err.message) {
+               case 'Invalid login credentials':
+                  {
+                     errorMessage = 'Por favor, verifica tu email y contraseña.'
+                  }
+                  break
+               case 'Email not confirmed':
+                  errorMessage = 'El correo no ha sido confirmado.'
+                  break
+               default:
+                  errorMessage = err.message
+            }
+            callToaster(errorMessage)
+         }
+      } finally {
+         onSubmitProps.setSubmitting(false)
+      }
    }
 
    const InitialFormValues = { email: '', password: '' }
    return (
       <>
+         <FormToast />
          <Formik
             initialValues={InitialFormValues}
             validationSchema={SignInSchema}

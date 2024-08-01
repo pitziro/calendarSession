@@ -1,16 +1,12 @@
 import { supabaseClient } from './supabaseClient'
 
 export async function loginClient(formEmail, formPwd) {
-   try {
-      const { data, error } = await supabaseClient.auth.signInWithPassword({
-         email: formEmail,
-         password: formPwd,
-      })
-      if (data) return data
-      if (error) console.log('Server error loggin in:', error.message)
-   } catch (err) {
-      console.log('Error loggin in:', err.message)
-   }
+   const { data, error } = await supabaseClient.auth.signInWithPassword({
+      email: formEmail,
+      password: formPwd,
+   })
+   if (error) throw error
+   return data
 }
 
 export async function registerClient(formEmail, formPwd) {
@@ -19,8 +15,8 @@ export async function registerClient(formEmail, formPwd) {
          email: formEmail,
          password: formPwd,
       })
+      if (data) return data
       if (error) console.log('Server error registering user:', error.message)
-      return data
    } catch (err) {
       console.log('Error registering :', err.message)
    }
@@ -28,8 +24,12 @@ export async function registerClient(formEmail, formPwd) {
 
 export async function logoutClient() {
    try {
-      const { data, error } = await supabaseClient.auth.signOut()
-      if (data) return data
+      const { error } = await supabaseClient.auth.signOut()
+      if (!error) {
+         console.log('Successfully signed out')
+         return { success: true }
+      }
+
       if (error) console.log('Server error signing out:', error.message)
    } catch (err) {
       console.log('Error signing out :', err.message)
@@ -57,4 +57,25 @@ export async function updateUserPwd(formNewPwd) {
    } catch (err) {
       console.log('Error updating password:', err.message)
    }
+}
+
+export async function getClientSession() {
+   try {
+      const {
+         data: { session },
+      } = await supabaseClient.auth.getSession()
+      return session
+   } catch (err) {
+      console.log('Error getting session:', err.message)
+   }
+}
+
+export const authListener = callback => {
+   const {
+      data: { subscription },
+   } = supabaseClient.auth.onAuthStateChange((_event, session) => {
+      console.log('evento', _event)
+      callback(session)
+   })
+   return () => subscription.unsubscribe()
 }
