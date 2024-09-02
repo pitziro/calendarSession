@@ -1,32 +1,33 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 
+const userInitialState = {
+   userEmail: '',
+   userId: '',
+   userFullname: '', // será Nombre + Apellido
+   userPhoneNumber: '',
+   rol: '', // invitado = socio | signUp = cliente
+   aseguradora: '',
+}
+
 const userInfoStore = set => ({
    // state variables
-   userInfo: {
-      userEmail: '',
-      userId: '',
-      userToken: '',
-      userFullname: '', //será Nombre + Apellido
-      userPhoneNumber: '',
-      rol: '',
-      aseguradora: '',
-   },
-
+   userInfo: userInitialState,
    isAuth: false,
-
+   sessionToken: '',
    userAgenda: [{}],
 
    // state setters
    setIsAuth: authValue => set({ isAuth: authValue }),
 
-   setUserInfo: (userEmail, userId, userToken) =>
+   setSessionToken: tokenValue => set({ sessionToken: tokenValue }),
+
+   setUserInfo: (userEmail, userId) =>
       set(state => ({
          userInfo: {
             ...state.userInfo,
             userEmail,
             userId,
-            userToken,
          },
       })),
 
@@ -43,15 +44,7 @@ const userInfoStore = set => ({
 
    emptyUserInfo: () =>
       set({
-         userInfo: {
-            userEmail: '',
-            userId: '',
-            userToken: '',
-            userFullname: '', //será Nombre + Apellido
-            userPhoneNumber: '',
-            rol: '',
-            aseguradora: '',
-         },
+         userInfo: userInitialState,
       }),
 })
 

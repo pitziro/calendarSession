@@ -19,12 +19,13 @@ const LoginForm = () => {
 
    const setUserInfo = useUserInfoStore(state => state.setUserInfo)
    const setIsAuth = useUserInfoStore(state => state.setIsAuth)
+   const setSessionToken = useUserInfoStore(state => state.setSessionToken)
    const isAuth = useUserInfoStore(state => state.isAuth)
 
    // por si entra directamente al link
    useEffect(() => {
       if (isAuth) navigate('/dashboard', { replace: true })
-   }, [isAuth, navigate])
+   }, [isAuth])
 
    const callToaster = pErrorMsg => {
       toast.error(pErrorMsg, {
@@ -33,12 +34,15 @@ const LoginForm = () => {
       })
    }
 
+   console.log('render login')
+
    const handleLogin = async (values, onSubmitProps) => {
       try {
          const logged = await loginClient(values.email, values.password)
          const { email, id } = logged.user
          const { access_token } = logged.session
-         setUserInfo(email, id, access_token)
+         setUserInfo(email, id)
+         setSessionToken(access_token)
          setIsAuth(true)
          navigate('/dashboard', { replace: true })
       } catch (err) {
@@ -46,9 +50,7 @@ const LoginForm = () => {
          if (err.message) {
             switch (err.message) {
                case 'Invalid login credentials':
-                  {
-                     errorMessage = 'Por favor, verifica tu email y contraseña.'
-                  }
+                  errorMessage = 'Por favor, verifica tu email y contraseña.'
                   break
                case 'Email not confirmed':
                   errorMessage = 'El correo no ha sido confirmado.'

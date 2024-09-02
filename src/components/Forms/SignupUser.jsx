@@ -16,12 +16,12 @@ const SignUpFormik = () => {
       const res = await registerClient(values.email, values.password)
       console.log('form enviada: ', values)
       console.log(res)
-      // handle los errores qué pasa cuando hay mensajes de error
+      //TODO: handle los errores qué pasa cuando hay mensajes de error
 
       onSubmitProps.setSubmitting(false)
    }
 
-   const InitialFormVales = {
+   const initialFormVales = {
       nombres: '',
       apellidos: '',
       movil: '',
@@ -31,7 +31,7 @@ const SignUpFormik = () => {
    return (
       <div className="formContainer">
          <Formik
-            initialValues={InitialFormVales}
+            initialValues={initialFormVales}
             validationSchema={SignUpSchema}
             onSubmit={(values, onSubmitProps) =>
                handleFormSubmit(values, onSubmitProps)

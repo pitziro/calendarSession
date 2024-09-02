@@ -5,7 +5,7 @@ function FormToast() {
    return (
       <ToastContainer
          position="top-right"
-         autoClose={3500}
+         autoClose={3700}
          limit={1}
          hideProgressBar={false}
          newestOnTop={false}

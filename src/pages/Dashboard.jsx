@@ -1,87 +1,29 @@
-import { useEffect } from 'react'
-import { useNavigate, Link } from 'react-router-dom'
-import { useUserInfoStore } from '../context/clientStore'
-import {
-   logoutClient,
-   getClientSession,
-   authListener,
-} from '../supabase/handleClient'
+import { useNavigate } from 'react-router-dom'
+import { logoutClient } from '../supabase/handleClient'
+import { useOutletContext } from 'react-router-dom'
 
 const Dashboard = () => {
-   const userInfo = useUserInfoStore(state => state.userInfo)
-   const isAuth = useUserInfoStore(state => state.isAuth)
-   const setIsAuth = useUserInfoStore(state => state.setIsAuth)
-   const emptyUserInfo = useUserInfoStore(state => state.emptyUserInfo)
-   // const setUserInfo = useUserInfoStore(state => state.setUserInfo)
+   const { userInfo } = useOutletContext()
 
-   useEffect(() => {
-      const handleAuthChange = session => {
-         if (session) {
-            setIsAuth(true)
-            // maneja la actualizacion de datos que usemos en pantalla
-         } else {
-            setIsAuth(false)
-            emptyUserInfo()
-         }
-      }
-
-      const initializeSession = async () => {
-         const session = await getClientSession()
-         handleAuthChange(session)
-      }
-      initializeSession()
-
-      const unsubscribe = authListener(handleAuthChange)
-
-      return () => {
-         unsubscribe()
-         console.log('unmounted')
-      }
-   }, [setIsAuth, emptyUserInfo])
-
-   return (
-      <>
-         {isAuth ? (
-            <DashboardDetail userInfo={{ ...userInfo }} />
-         ) : (
-            <NotLogged />
-         )}
-      </>
-   )
-}
-export default Dashboard
-
-const NotLogged = () => {
-   return (
-      <>
-         <pre> Debes estar logueado </pre>
-         <section className="sFormLinks">
-            ¿Ya tienes una cuenta? Logueate&nbsp;
-            <Link to="/login">aqui</Link>
-         </section>
-      </>
-   )
-}
-
-const DashboardDetail = ({ userInfo }) => {
    const navigate = useNavigate()
 
    const handleLogout = async () => {
       await logoutClient()
-      navigate('/login')
+      navigate('/login', { replace: true })
    }
 
    return (
-      <div>
+      <>
          <h1>Dashboard</h1>
-         {userInfo.userEmail}
-         <br />
+         <h2>Welcome, {userInfo?.userEmail}</h2>
 
          <section>
             <button type="button" onClick={handleLogout}>
                Logout
             </button>
          </section>
-      </div>
+      </>
    )
 }
+
+export default Dashboard

@@ -1,18 +1,60 @@
+import { Link } from 'react-router-dom'
 import { Field, Form, Formik } from 'formik'
 import { emailPwdResetSchema } from './FormSchema'
-import InputField from './CustomInputField'
 import { resetUserPwd } from '../../supabase/handleClient'
-import { Link } from 'react-router-dom'
+import { toast } from 'react-toastify'
+import InputField from './CustomInputField'
+import FormToast from './FormToast'
 
 function PwdRecover() {
-   const handleFormSubmit = async (values, onSubmitProps) => {
-      const res = await resetUserPwd(values.email)
-      console.log('form enviada: ', values)
-      console.log(res)
+   const callToasterError = pErrorMsg => {
+      toast.error(pErrorMsg, {
+         className: 'myToastContainerErr',
+         bodyClassName: 'myToastBodyErr',
+      })
+   }
 
-      // handle los errores qué pasa cuando hay mensajes de error
-      // esto deberia llevar a otra pagina, tal vez la de login con un mensaje de exito o error
-      onSubmitProps.setSubmitting(false)
+   const callToasterOk = pOkMsg => {
+      toast.success(pOkMsg, {
+         className: 'myToastContainerErr',
+         bodyClassName: 'myToastBodyErr',
+      })
+   }
+
+   const handleFormSubmit = async (values, onSubmitProps) => {
+      try {
+         await resetUserPwd(values.email)
+         callToasterOk(
+            'Si tu correo esta registrado, recibirás un link en unos momentos'
+         )
+      } catch (error) {
+         let errorMessage = 'Error! Por favor, intenta de nuevo más tarde.'
+         switch (error.message) {
+            case 'Email not found':
+               errorMessage =
+                  'No se encontró una cuenta con ese correo electrónico'
+               break
+            case 'For security purposes, you can only request this once every 60 seconds':
+               errorMessage =
+                  'Por seguridad, solo puedes solicitar esto una vez cada 60 segundos'
+               break
+            case 'Invalid email':
+               errorMessage = 'El correo electrónico proporcionado no es válido'
+               break
+            case 'Rate limit exceeded':
+               errorMessage =
+                  'Demasiados intentos. Por favor, intenta de nuevo más tarde'
+               break
+            default:
+               if (error.status === 500) {
+                  errorMessage =
+                     'Error del servidor. Por favor, intenta de nuevo más tarde'
+               }
+         }
+         callToasterError(errorMessage)
+      } finally {
+         onSubmitProps.setSubmitting(false)
+      }
    }
 
    const InitialFormVales = {
@@ -21,6 +63,7 @@ function PwdRecover() {
 
    return (
       <div className="formContainer">
+         <FormToast />
          <Formik
             initialValues={InitialFormVales}
             validationSchema={emailPwdResetSchema}
